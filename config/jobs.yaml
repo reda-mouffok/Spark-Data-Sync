@@ -1,0 +1,47 @@
+Job1:
+  source:
+    sourceType: csv
+    filePath: path/SparkDataSync/test/test.csv
+      column:
+      filter:
+      renamedColumn: [ [ count,id ] ]
+      readTolerance : True
+  target:
+    targetType: parquet
+    filePath: path/test/customers.parquet
+    mode: overwrite
+    partitionsNumber : 20
+    partitionsColumn: [ORIGIN_COUNTRY_NAME]
+  Job2:
+    source:
+      sourceType: parquet
+      filePath: path/test/customers.parquet
+      column:
+      filter:
+      renamedColumn: [ [ index,id ] ]
+    target:
+      targetType: postgres
+      tableName: s1.test
+      sourceKey: [ id ]
+      targetKey: [ id ]
+      mode: scd1
+  Job3:
+    source:
+      sourceType: postgres
+      tableName: s1.test
+    target:
+      targetType: parquet
+      filePath: path/test/customers-sauv.parquet
+      mode: overwrite
+  Job4:
+    source:
+      sourceType : parquet
+      filePath : test.csv
+      key :
+      column :
+      filter :
+    target :
+      targetType : parquet
+      filePath : testResult4.parquet
+      key :
+      mode : overwrite
